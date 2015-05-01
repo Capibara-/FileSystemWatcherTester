@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,63 +15,88 @@ namespace FileSystemWatcherTester
         private static long m_lastOffset = 0;
 
 
-        // CHANGE THIS PATH TO THE PATH OF THE LOGFILE!!!!!
+        // CHANGE THIS PATH TO THE PATH OF THE LOGFILE
         private static string m_logFileFullPath = @"d:\Program Files (x86)\Hearthstone\Hearthstone_Data\output_log.txt";
-        // CHANGE ME LIORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!
+        private static string m_outputFilePath = @"D:\Temp\output.txt";
+        // CHANGE THIS PATH FOR OUTPUT IF NEEDED
         
         
         private static int m_delay = 100;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Starting.");
-            // Stupid polling method.
-            while (true)
-            {
-                ReadFileAsync();
-            }
-        }
-
-		private static async void ReadFileAsync()
-        {
             FirstGame = true;
-            while (true)
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenSource.Token;
+            Task listener = Task.Factory.StartNew(() =>
             {
-                using (FileStream fs = new FileStream(m_logFileFullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                Console.WriteLine("Task started.");
+                Regex cardMovementRegex = new Regex(@"\w*(cardId=(?<Id>(\w*))).*(zone\ from\ (?<from>((\w*)\s*)*))((\ )*->\ (?<to>(\w*\s*)*))*.*");
+                try
                 {
-                    if (FirstGame)
+                    while (true)
                     {
-                        FirstGame = false;
-                        m_lastOffset = fs.Length;
-                        await Task.Delay(m_delay);
-                        continue;
-                    }
-                    else
-                    {
-                        fs.Seek(m_lastOffset, SeekOrigin.Begin);
-                        if (fs.Length != m_lastOffset)
+                        using (FileStream fs = new FileStream(m_logFileFullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         {
-                            long newLength = fs.Length;
-                            using (StreamReader sr = new StreamReader(fs))
+                            if (FirstGame)
                             {
-                                string newLines = sr.ReadToEnd();
-                                // This is the if that parses the actual line, any regex logic would go here (keep the !newLines.EndsWith("\n") in the if).
-                                if (newLines.EndsWith("\n") && newLines.Contains("Zone") && newLines.ToLower().Contains("missiles"))
+                                FirstGame = false;
+                                m_lastOffset = fs.Length;
+                                Thread.Sleep(m_delay);
+                                continue;
+                            }
+                            else
+                            {
+                                fs.Seek(m_lastOffset, SeekOrigin.Begin);
+                                if (fs.Length != m_lastOffset)
                                 {
-                                    Console.WriteLine(string.Format("[+] Line written: {0}\n\n", newLines));
-                                    m_lastOffset = fs.Length;   
-                                }
-                                else
-                                {
-                                    await Task.Delay(m_delay);
-                                    continue;
+                                    long newLength = fs.Length;
+                                    using (StreamReader sr = new StreamReader(fs))
+                                    {
+                                        string newLine = sr.ReadToEnd();
+                                        if (cardMovementRegex.IsMatch(newLine))
+                                        {
+
+                                            Match match = cardMovementRegex.Match(newLine);
+                                            string id = match.Groups["Id"].Value.Trim();
+                                            string from = match.Groups["from"].Value.Trim();
+                                            string to = match.Groups["to"].Value.Trim();
+                                            if (id != "")
+                                            {
+                                                string output = string.Format("\n[+] Card Moved - ID: {0} FROM: {1} TO: {2}", id, from, to);
+                                                Console.WriteLine(output);
+                                            }
+                                            m_lastOffset = fs.Length;
+                                        }
+                                        else
+                                        {
+                                            Thread.Sleep(m_delay);
+                                            continue;
+                                        }
+                                    }
                                 }
                             }
-                          
+                            Thread.Sleep(m_delay);
+                            if (token.IsCancellationRequested)
+                            {
+                                Console.WriteLine("Task ended.");
+                                break;
+                            }
                         }
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(e.Message);
+                }
+            }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            string input = Console.ReadLine();
+            if (input == "exit")
+            {
+                cancellationTokenSource.Cancel();
             }
+            Console.ReadLine();
         }
 
         public static bool FirstGame
