@@ -1,0 +1,4 @@
+*.exe
+FileSystemWatcherTester/bin/Debug/FileSystemWatcherTester.exe
+*.pdb
+*.cache
