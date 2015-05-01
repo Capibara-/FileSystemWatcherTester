@@ -12,52 +12,23 @@ namespace FileSystemWatcherTester
     {
         private static bool m_firstGame = false;
         private static long m_lastOffset = 0;
+
+
+        // CHANGE THIS PATH TO THE PATH OF THE LOGFILE!!!!!
         private static string m_logFileFullPath = @"d:\Program Files (x86)\Hearthstone\Hearthstone_Data\output_log.txt";
+        // CHANGE ME LIORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!
+        
+        
         private static int m_delay = 100;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Starting.");
+            // Stupid polling method.
             while (true)
             {
                 ReadFileAsync();
             }
-
-            //int delay = 100;
-            //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            //CancellationToken token = cancellationTokenSource.Token;
-            //Task listener = Task.Factory.StartNew(() =>
-            //{
-            //    while (true)
-            //    {
-
-            //        using (FileStream fs = new FileStream(m_logFileFullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            //        {
-            //            if (FirstGame)
-            //            {
-            //                FirstGame = false;
-            //                m_lastOffset = fs.Length;
-            //                await Task.Delay(m_delay);
-            //                continue;
-            //            }
-            //            else
-            //            {
-            //                if (fs.Length != m_lastOffset)
-            //                {
-            //                    Console.WriteLine("File Changed!");
-            //                    m_lastOffset = fs.Length;
-            //                }
-            //            }
-            //        }
-
-            //        Thread.Sleep(delay);
-            //        if (token.IsCancellationRequested)
-            //            break;
-            //    }
-
-            //    //cleanup
-            //}, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-
         }
 
 		private static async void ReadFileAsync()
