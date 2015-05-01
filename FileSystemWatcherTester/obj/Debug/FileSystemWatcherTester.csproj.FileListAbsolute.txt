@@ -1,0 +1,12 @@
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\bin\Debug\FileSystemWatcherTester.exe.config
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\bin\Debug\FileSystemWatcherTester.exe
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\bin\Debug\FileSystemWatcherTester.pdb
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.csprojResolveAssemblyReference.cache
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.exe
+D:\VS2013\Projects\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.pdb
+v:\FileSystemWatcherTester\FileSystemWatcherTester\bin\Debug\FileSystemWatcherTester.exe.config
+v:\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.exe
+v:\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.pdb
+d:\temp\FileSystemWatcherTester\FileSystemWatcherTester\bin\Debug\FileSystemWatcherTester.exe.config
+d:\temp\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.exe
+d:\temp\FileSystemWatcherTester\FileSystemWatcherTester\obj\Debug\FileSystemWatcherTester.pdb
