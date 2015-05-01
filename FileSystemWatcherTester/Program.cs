@@ -84,13 +84,16 @@ namespace FileSystemWatcherTester
                             {
                                 string newLines = sr.ReadToEnd();
                                 // This is the if that parses the actual line, any regex logic would go here (keep the !newLines.EndsWith("\n") in the if).
-                                if (!newLines.EndsWith("\n") || !newLines.Contains("Zone") || !newLines.ToLower().Contains("missiles"))
+                                if (newLines.EndsWith("\n") && newLines.Contains("Zone") && newLines.ToLower().Contains("missiles"))
+                                {
+                                    Console.WriteLine(string.Format("[+] Line written: {0}\n\n", newLines));
+                                    m_lastOffset = fs.Length;   
+                                }
+                                else
                                 {
                                     await Task.Delay(m_delay);
                                     continue;
                                 }
-                                Console.WriteLine(string.Format("[+] Line written: {0}\n\n", newLines));
-                                m_lastOffset = fs.Length;
                             }
                           
                         }
